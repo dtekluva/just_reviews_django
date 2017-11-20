@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+{% load static %}
+<html lang="en">
+
+<head>
+    <title>Just-Reviews</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static "reviews/assets/plugins/bootstrap/css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "reviews/assets/css/main.css" %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <body>
+        <form id="category_form" method="post" action="/reviews/add_product/" enctype="multipart/form-data">
+            {% csrf_token %} 
+            <input name="category" placeholder="Please pick a category" list ="Category" id="">
+            <datalist id="Category">
+                
+                
+                {% for options in categories %}
+                <option value="{{ options.name }}">{{ options.name }}</option>
+                {% endfor %}
+                
+            </datalist>
+            <br>
+            {% for hidden in form.hidden_fields %}
+            {{ hidden }} 
+            {% endfor %} 
+            {% for field in form.visible_fields %}
+            {{ field.errors }} 
+            {{ field.help_text }} 
+            {{ field }}
+            <br>
+            {% endfor %}
+            
+            <input type="submit" name="submit" value="Create Product" />
+
+            {{error}}
+        </form>
+
+        <h1>comment</h1>
+        <hr>
+        
+        <form id="category_form" method="post" action="/reviews/add_comment/carrots/" enctype="multipart/form-data">
+            {% csrf_token %} 
+            
+            <br>
+            {% for hidden in commentform.hidden_fields %}
+            {{ hidden }} 
+            {% endfor %} 
+            {% for field in commentform %}
+            {{ field.errors }} 
+            {{ field.help_text }} 
+        {{ field }}
+            <br>
+        
+            {% endfor %}
+            
+            <input type="submit" name="submit" value="Create Comment" />
+        
+            {{error}}
+        </form>
+        

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+{% load static %}
+<html lang="en">
+
+<head>
+    <title>Just-Reviews</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static "reviews/assets/plugins/bootstrap/css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "reviews/assets/css/main.css" %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <body>
+        <div class="container ">
+
+            <header class="head">
+
+                <div class="page-header">
+                    <div class="topmost__box-sign-up">
+                        <a href="/reviews/">
+                            <h1>  Just-Reviews
+                                <small>
+                                    <br> 
+                                    <h2>
+                                        No. 1 reviews landing in Nigeria
+                                    </h2>
+                                </small>
+                            </h1>
+                        </a>
+
+                        <div class="authenthication">
+                        
+                    {% if user.isAuthenticated %}
+                            <a href="#" class="sign-up">
+                                <button class="btn btn-primary first-button">Welcome Inyang</button>
+                            </a>
+                    {% endif %}
+
+                    {% if not user.isAuthenticated %}
+
+                            <a href="#" class="sign-up">
+                                    <button class="btn btn-primary first-button">Sign up</button>
+                            </a>
+                            <a href="#" class="sign-in">
+                                <button class="btn btn-primary second-button">Sign-in</button>
+                            </a>
+                        
+                    {% endif %}
+                        </div>
+                    </div>
+                    <div>
+                        
+                        <form id="SearchForm" method="get" action="/reviews/search/"
+                        enctype="multipart/form-data">
+                        
+                        <div class="input-group">
+                            
+                            
+                            <input class="form-control" placeholder="Product" type="text" name="name" maxlength="128" required id="id_name" value='{{query}}' />
+                            
+                            <span class="input-group-btn">
+                                <input class="btn btn-primary" type="submit" name="submit" value="Search" />
+                            </span>
+                            
+                        </div>
+        
+                        </form>
+
+                   
+                        
+                    </div>
+                </div>
+
+
+            </header>
+
+            <main>
+                <!---review AD-->
+                <div class="help-reviews">
+                    <div>
+                        <img src="{% static "reviews/assets/img/write_review.png" %}" alt="help-image">
+                    </div>
+
+                    <div class="u-space-l4">
+                        <h2 class="alternate u-space-b3">Help the Community</h2>
+
+                        <p class="u-space-b3">+
+                            Find Just-reviews helpful? Start helping others by sharing your experience.
+                           
+                        </p>
+                    </div>
+                </div>
+        
+                <!---review AD-->
+                <hr>
+                <!---reviews display-->
+                <div class="first-container">
+                <div class="trending">
+                    <p>
+                        <span>
+                            <h3>
+                                    Results
+                            </h3>
+                            
+                        </span>
+
+                    </p>
+                </div>
+
+                <div class="container2">
+                        {% for product in result %}
+                    <div class="two" id="third">
+                        <div class="w460px">
+                            <div class="row-one-blog-head">
+                                
+                                <div class="trending-product">
+                                    {% if product.image %}
+                                    <img src="{{ product.image.url }}" alt="image here">
+                                    {% else %}
+                                    <img src="http://localhost:8000/media/product_imgs/default.png" alt="image here">
+                                    {% endif %}
+                                </div>
+                               
+                                {% if product.slug %}
+                                <a href="/reviews/details/{{ product.slug }}">
+                                {% else %}
+                                <a href="#">
+                                {% endif %}
+                                    <h3 >
+                                    {{product.name}}
+                                    </h3>
+                                </a>
+
+                                <h4 class="user-satisfaction-thumbs">
+                                    
+                                    <span class="glyphicon glyphicon glyphicon-thumbs-up thumbs-up" aria-hidden="true"> {{product.thumbsUp}} </span>
+                                    <span class="glyphicon glyphicon glyphicon-thumbs-down thumbs-down" aria-hidden="true"> {{product.thumbsDown}} </span>
+                                    
+                                </h4>
+
+                                
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    {% endfor %}
+                  
+                </div>
+                
+                <!-- latest post ends here -->
+
+            </main>
+
+           
+           <hr>
+        </div>
+
+     
+
+        
+        
+    </body>
+
+</html>
