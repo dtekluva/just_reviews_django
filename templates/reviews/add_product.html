@@ -16,7 +16,7 @@
 
         
         <header class="head">
-            
+
             <div class="page-header">
                 <div class="topmost__box-sign-up">
                     <a href="/reviews/">
@@ -34,7 +34,7 @@
                     
                 {% if user.is_authenticated %}
                         <a href="#" class="sign-up usernameref">
-                            <button class="btn btn-primary first-button">Hi {{user.username}}</button>
+                            <button class="btn btn-primary first-button">Welcome {{user.username}}</button>
                         </a>
                         <a href="/reviews/signout" class="sign-in">
                             <button class="btn btn-primary second-button">Sign-out</button>
@@ -43,22 +43,21 @@
                 {% else %}
 
                         <a href="/reviews/signup" class="sign-up">
-                                <!-- <button class="btn btn-primary first-button">Sign up</button> -->
+                                <button class="btn btn-primary first-button">Sign up</button>
                         </a>
                         <a href="/reviews/signin" class="sign-in">
-                            <!-- <button class="btn btn-primary second-button">Sign-in</button> -->
+                            <button class="btn btn-primary second-button">Sign-in</button>
                         </a>
                     
                 {% endif %}
 
                     <div class="pic " style="position:relative; top:110%; left:-22%;" >
-                        
+
                         <a href="#">
                             <div class="avatar pull-right" >
-                            <!-- <img style=" border-radius:20%; height:60px; width:60px;" src={% if user.user.image %}"  {{user.user.image.url|default_if_none:'#'}}  "{% endif %} alt="image here"> -->
+                            <img style=" border-radius:20%; height:60px; width:60px;" src={% if user.user.image %}"  {{user.user.image.url|default_if_none:'#'}}  "{% endif %} alt="image here"33   qaE\`w                                                          \>
                             </div>
                         </a>
-                        
                     </div>
                     </div>
                 </div>
@@ -93,26 +92,7 @@
             <main>
                 <!---review AD-->
 
-                <div class="help-reviews">
-                        <div>
-                                <img src="{% static "reviews/assets/img/write_review.png" %}" alt="help-image">
-                        </div>
-    
-                        <div class="u-space-l4">
-                            <h2 class="alternate u-space-b3"><font face = "Comic sans MS" size =" 5">Join easy and start helping the Community today</font><br /></h2>
-    
-                            <p class="u-space-b3">
-                                Find Just-reviews helpful? Start helping others by sharing your experience.
-    
-                            </p>
-                            <a href="#" class="sign-up">
-                                <!-- <button class="btn btn-primary first-button">Write a review now</button> -->
-                            </a>
-                            <a href="#" class="sign-up">
-                                <!-- <button class="btn btn-primary first-button">Share a new product</button> -->
-                            </a>
-                        </div>
-                    </div>
+               
         
                 <!---review AD-->
                 <hr>
@@ -122,7 +102,7 @@
                     <p>
                         <span>
                             <h3>
-                                LOGIN TO JUST REVIEWS
+                                New Product
                             </h3>
                             
                         </span>
@@ -131,80 +111,43 @@
                 </div>
 
                 <div class="container2">
-                        <hr>
-                        
-        
-                        <hr>
-        
+                                
                         <div class="container2">
                             <div class="row" style="display:flex; color :rgb(148, 148, 148); padding-top:10px; justify-content:center; box-shadow: 0px 1px 2px #888888;">
-                                <div class="container2 col-md-4" style="border-right: 1px solid rgb(202, 202, 202);">
-                                    <p >
-                                        <h3 style="display:flex; color :rgb(148, 148, 148);  justify-content:center;">Sign-in</h3>
-                                    </p>
-                                    <form method="POST" action="/reviews/signin/" >
+                               
+                                <form method="POST" action="/reviews/add_product/" enctype="multipart/form-data">
                                         {% csrf_token %}
                                         <p>
-                                            <input class="form-control" placeholder="Username" type="text" name="username">
-                                        </p>
-                                        <p>
-                                            <input class="form-control" placeholder="Password" type="password" name="password">
-                                        </p>
-        
-                                        <p>
-                                            <button style="width:100%;" class="btn btn-primary" type="submit">Login</button>
-                                        </p>
-                                    </form>
-                                </div>
-                                <div class="container2 col-md-4" style="border-left: 1px solid rgb(226, 226, 226);" >
-                                        <p >
-                                            <h3 style="display:flex; color :rgb(148, 148, 148);  justify-content:center;">Sign-up</h3>
-                                        </p>
-                                    <form method="POST" action="/reviews/signup/" enctype="multipart/form-data">
-                                        {% csrf_token %}                                
+                                            <select class="form-control" name="category" id="">
+                                                <option value="general">Category</option>
+                                                {% for options in categories %}
+                                                <option value="{{ options.name }}">{{ options.name }}</option>
+                                                {% endfor %}    
+                                            </select>      
+                                        </p>   
+                                        {% for hidden in form.hidden_fields %}
+                                        {{ hidden }} 
+                                        {% endfor %}    
                                         <p>
         
-                                            <input class="form-control" type="text" name="last_name" placeholder="Last Name" maxlength="10" required id="id_last_name" />
+                                            <input class="form-control" type="text" name="name" placeholder="Product Name" maxlength="50" required id="id_Product_name" />
                                         </p> 
         
                                         <p>
-                                            <input class="form-control" type="text" name="first_name" placeholder="First Name"  maxlength="10" required id="id_first_name" />
+                                            <input class="form-control" type="text" name="details" placeholder="Description"  maxlength="300" required id="id_details_name" />
                                         
                                         </p>
                                         
                                         <p>
-                                            <input class="form-control" type="text" name="username" placeholder="UserName"  maxlength="10" required id="id_username" />
-                                        </p> 
-                                        
-                                        <p>
-                                            <input class="form-control" type="email" name="email" placeholder="E-mail" maxlength="20" required id="id_email" />
+                                            Product image<input type="file" name="image" id="id_image"> 
                                         </p>
                                         
                                         <p>
-                                            <input class="form-control" type="password" name="password" placeholder="Password" maxlength="256" required id="id_password" />
-                                        </p> 
-                                        
-                                        <p>
-                                            <input class="form-control" type="password" name="password" placeholder="Retype Password" maxlength="256" required id="id_password" />
-                                        </p>
-        
-                                        <p>
-                                            Profile image<input type="file" name="image" id="id_image"> 
-                                        </p>
-                                        
-                                        <p>
-                                            <button style="width:100%;" class="btn btn-primary" type="submit">Add me to Just-Reviews</button>
+                                            <button style="width:100%;" class="btn btn-primary" type="submit">Add Product to Just-Reviews</button>
                                         </p>
                                         
                                     </form>
-                                    {% for error in error %} 
-                                    <div style="color: red">
-                                        <ul>
-                                            <li>{{error}}</li>
-                                        </ul>
-                                    </div>
-                                    {% endfor%}
-                                </div>
+                            
                         </div>
                         
                 <!-- latest post ends here -->

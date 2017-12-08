@@ -1,5 +1,5 @@
 from django.contrib import admin
-from reviews.models import Product, Category, Comment
+from reviews.models import Product, Category, Comment, UserAccount
 # Register your models here.
 
 
@@ -19,5 +19,6 @@ class CommentAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Category)
+admin.site.register(UserAccount)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Comment, CommentAdmin)

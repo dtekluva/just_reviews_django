@@ -5,13 +5,9 @@ function thumbsup(slug, username){
          .then((data) => {
             console.log(document.getElementsByClassName(slug)[0].innerHTML)
             document.getElementsByClassName(slug)[0].innerHTML = ' '+data.like;
-            alert("liked")
          })
      });
 };
-
-
-
 function thumbsdown(slug, username){
    
         fetch(`http://localhost:8000/reviews/thumbs_down/${ slug }/${username}`)
@@ -24,7 +20,6 @@ function thumbsdown(slug, username){
                 
                 // console.log(now.document.getElementsByClassName(slug))
                 now.innerHTML = ' '+data.dislike;
-                alert("Disliked")
             })
         });
     }
@@ -33,7 +28,6 @@ function thumbsdown(slug, username){
 
 
 function back_comment(comment_id, username){
-    console.log("got here")
     
         fetch(`http://localhost:8000/reviews/back_comment/${ comment_id }/${username}`)
         .then(res => {
@@ -41,7 +35,6 @@ function back_comment(comment_id, username){
             .then((data) => {
                 console.log(data)
                document.getElementsByClassName(comment_id)[0].innerHTML = ' '+data.backs+'Backs |';
-               alert("Backed")
             })
         });
     }
@@ -119,3 +112,32 @@ function datify_seconds(seconds){
 
     return seconds;
 }
+
+function authenticate(){
+    fetch(`http://localhost:8000/reviews/thumbs_down/${ slug }/${username}`)
+    .then(res => {
+        res.json()
+        .then((data) => {
+            console.log(data)
+            var now = (document.getElementsByClassName("dis-" + slug))[0];
+            console.log(now)
+            
+            // console.log(now.document.getElementsByClassName(slug))
+            now.innerHTML = ' '+data.dislike;
+            alert("Disliked")
+        })
+    });  
+}
+//switch display in profile view
+
+function switch_display(){
+    target   = document.getElementsByClassName("switcher");
+    edit_details = document.getElementsByClassName("edit_details")
+    view_details = document.getElementsByClassName("view_details")
+
+    target[0].addEventListener("click", function(){
+        edit_details[0].style.display = "";
+        view_details[0].style.display = "none";
+    })
+}
+switch_display();

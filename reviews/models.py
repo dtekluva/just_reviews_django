@@ -25,6 +25,7 @@ class Product(models.Model):
     image           = models.FileField(upload_to='product-imgs/',null=True, blank=True)
     thumbsUpBy      = models.CharField(max_length=10000, default = "test", null=True, blank=True)
     thumbsDownBy    = models.CharField(max_length=10000, default = "test", null=True, blank=True)
+    posted_by       = models.ForeignKey( User, on_delete=models.CASCADE, blank=True, null = True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -47,6 +48,7 @@ class Comment(models.Model):
     backedBy    = models.CharField(max_length=10000, default = "test", null=True, blank=True)
     product     = models.ForeignKey(Product, on_delete=models.CASCADE)
     comment_product_slug = models.CharField(max_length=100, null=True, blank=True)
+    posted_by   = models.ForeignKey( User, on_delete=models.CASCADE, blank=True, null = True)
 
     def __str__(self):              # __unicode__ on Python 2
         return self.title
@@ -55,10 +57,13 @@ class Comment(models.Model):
         ordering = ('title',)
 # Create your models here.
 
-# class UserAccount(models.Model):
-#     user        = models.OneToOneField(User, related_name = "useraccount")
-#     occupation  = models.CharField(max_length=256)
-#     phone       = models.CharField(max_length=15)
+class UserAccount(models.Model):
+    User        = models.OneToOneField(User, on_delete=models.CASCADE, related_name = "user")
+    image       = models.FileField(upload_to='profile-imgs/',null=True, blank=True)
+    joined      = models.IntegerField(default=time.time(),  blank=True)
 
-#     def __str__(self):
-#         return self.user.username
+    def __str__(self):
+        return self.User.username
+
+    class Meta:
+        verbose_name_plural = 'User Accounts'

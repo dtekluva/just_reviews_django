@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+{% load static %}
+<html lang="en">
+
+<head>
+    <title>Just-Reviews</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static "reviews/assets/plugins/bootstrap/css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "reviews/assets/css/main.css" %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+    <body onload="addtime();">
+
+        
+        <header class="head">
+            
+            <div class="page-header">
+                <div class="topmost__box-sign-up">
+                    <a href="/reviews/">
+                        <h1>  Just-Reviews
+                            <small>
+                                <br> 
+                                <h2>
+                                    No. 1 reviews landing in Nigeria
+                                </h2>
+                            </small>
+                        </h1>
+                    </a>
+
+                    <div class="authenthication pull-right">
+                    
+                {% if user.is_authenticated %}
+                        <a href="#" class="sign-up usernameref">
+                            <button class="btn btn-primary first-button">Hi {{user.username}}</button>
+                        </a>
+                        <a href="/reviews/signout" class="sign-in">
+                            <button class="btn btn-primary second-button">Sign-out</button>
+                        </a>
+
+                {% else %}
+
+                        <a href="/reviews/signup" class="sign-up">
+                                <!-- <button class="btn btn-primary first-button">Sign up</button> -->
+                        </a>
+                        <a href="/reviews/signin" class="sign-in">
+                            <!-- <button class="btn btn-primary second-button">Sign-in</button> -->
+                        </a>
+                    
+                {% endif %}
+
+                    <div class="pic " style="position:relative; top:110%; left:-22%;" >
+                        
+                        <a href="#">
+                            <div class="avatar pull-right" >
+                            <img style=" border-radius:20%; height:60px; width:60px;" src={% if user.user.image %}"  {{user.user.image.url|default_if_none:'#'}}  "{% endif %} alt="image here">
+                            </div>
+                        </a>
+                        
+                    </div>
+                    </div>
+                </div>
+                <div>
+                    
+                    
+                    <form id="SearchForm" method="get" action="/reviews/search/"
+                    enctype="multipart/form-data">
+                    
+                    <div class="input-group">
+                        
+                        
+                        <input class="form-control" placeholder="Product" type="text" name="name" maxlength="128" required id="id_name" />
+                        
+                        <span class="input-group-btn">
+                            <input class="btn btn-primary" type="submit" name="submit" value="Search" />
+                        </span>
+                        
+                    </div>
+
+                    </form>
+                    
+                </div>
+            </div>
+
+
+        </header>
+
+        <div class="container ">
+
+            <main>
+                <!---review AD-->
+
+                <div class="help-reviews">
+                        <!-- <div>
+                                <img src="{% static "reviews/assets/img/write_review.png" %}" alt="help-image">
+                        </div>
+    
+                        <div class="u-space-l4">
+                            <h2 class="alternate u-space-b3"><font face = "Comic sans MS" size =" 5">Join easy and start helping the Community today</font><br /></h2>
+    
+                            <p class="u-space-b3">
+                                Find Just-reviews helpful? Start helping others by sharing your experience.
+    
+                            </p>
+                            <a href="#" class="sign-up">
+                                <button class="btn btn-primary first-button">Write a review now</button>
+                            </a>
+                            <a href="#" class="sign-up">
+                                <button class="btn btn-primary first-button">Share a new product</button>
+                            </a>
+                        </div> -->
+                    </div>
+        
+                <!---review AD-->
+                <!---reviews display-->
+                <div class="first-container">
+                <div class="trending">
+                    <p>
+                        <span>
+                            <h3>
+                                USER PROFILE
+                            </h3>
+                            
+                        </span>
+
+                    </p>
+                </div>
+
+                <div class="container2">                      
+        
+                    <div class="container2">
+                        <div class="row" style="text-align:center; display:flex; color :rgb(148, 148, 148); padding-top:10px; justify-content:center; box-shadow: 0px 1px 2px #888888;">
+                            
+                            <div class="view_details container2 col-md-4" style="flex:2;" >
+                                <div class="user-image" >
+                                    <img style=" border-radius:20%; height:400px; width:100%;" src={% if user.user.image %}"  {{user.user.image.url|default_if_none:'#'}}  "{% endif %} alt="image here">
+                                </div>
+                                    <p >
+                                        <h3 style="display:flex; color :rgb(148, 148, 148);  justify-content:center;">{{user.last_name }} {{user.first_name }}</h3>
+                                    </p>
+                                                               
+                                    <p>
+                                        <div class="users_detail">
+
+                                            Name : {{user.last_name }} {{user.first_name }} 
+                                        </div>
+                                    </p> 
+    
+                                    <p>
+                                        <div class="users_detail">
+                                            Username : {{user.username}}
+                                        </div>
+                                    </p> 
+                                    
+                                    <p>
+                                        <div class="users_detail">
+                                            Email : {{user.email}}
+                                        </div>
+                                    </p> 
+                                    <p>
+                                        <span>Joined : </span><span onload="was_added" class="glyphicon glyphicon-calendar comment_time" aria-hidden="true" id="comment_time"> {{user.user.joined}} </span>
+                                    </p>
+                                    
+                                    <p>
+                                        <button style="width:100%;" class="btn btn-primary switcher" >Edit my details</button>
+                                    </p>
+                                
+                                
+                            </div>
+
+                            <div class="edit_details container2 col-md-4" style="flex:2; display:none;"  >
+                                <div class="user-image" >
+                                    <img style=" border-radius:20%; height:400px; width:100%;" src={% if user.user.image %}"  {{user.user.image.url|default_if_none:'#'}}  "{% endif %} alt="image here">
+                                </div>
+                                    <p >
+                                        <h3 style="display:flex; color :rgb(148, 148, 148);  justify-content:center;">Edit user data</h3>
+                                    </p>
+                                <form method="POST" action="/reviews/profile_view/{{user.username}}/" enctype="multipart/form-data">
+                                    {% csrf_token %}                                
+                                    <p>
+    
+                                        <input class="form-control" type="text" name="last_name"  value="{{user.last_name}}" placeholder="Last Name" maxlength="10" required id="id_last_name" />
+                                    </p> 
+    
+                                    <p>
+                                        <input class="form-control" type="text" name="first_name" value="{{user.first_name}}" placeholder="First Name"  maxlength="10" required id="id_first_name" />
+                                    
+                                    </p>
+                                    
+                                    <p>
+                                        <input class="form-control" type="text" name="username" value="{{user.username}}" placeholder="UserName"  maxlength="10" required id="id_username" />
+                                    </p> 
+                                    
+                                    <p>
+                                        <input class="form-control" type="email" name="email" value="{{user.email}}" placeholder="E-mail" maxlength="20" required id="id_email" />
+                                    </p>
+                                        
+                                    <p>
+                                        Profile image<input type="file" name="image" id="id_image"> 
+                                    </p>
+                                    
+                                    <p>
+                                        <button style="width:100%;" class="btn btn-primary" type="submit">Add me to Just-Reviews</button>
+                                    </p>
+                                    
+                                </form>
+                                {{ form.errors }}
+                                {{ form.non_field_errors }}
+                                {% if error %} 
+                                <div style="color: red">
+                                    <ul>
+                                        <li>{{error}}</li>
+                                        <li>{{ form.errors }}
+                                            {{ form.non_field_errors }}</li>
+                                    </ul>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="user_comments" style="flex:4;">
+                                    <h4>
+                                        Comments Posted By You
+                                    </h4>
+                                    <hr>
+
+                                    {% for comment in comments %}
+                                    <div class="col-row" style=" width: 500px; margin: 0 auto;" >
+                                            
+                                        <div>
+                
+                                            <p>
+                                                <h4>
+                                                    {{comment.product}}
+                                                </h4>
+                
+                                                <h5>Posted by : {{comment.title}}</h5>
+                                                
+                                                
+                                                <span onload="was_added" class="glyphicon glyphicon-time comment_time" aria-hidden="true" id="comment_time"> {{comment.added}} |</span>
+                                                
+                                                <span>
+                                                    <a onclick="back_comment('{{comment.id}}','{{ user.username}}')">
+                                                        <span class="glyphicon glyphicon-hand-right {{comment.id}}" aria-hidden="true">  {{comment.backs}}Backs |</span>
+                                                    </a>
+                                                </span>
+                                                
+                                            </p>
+                                            <div class="comment-image">
+                
+                                                
+                                                {% if comment.image %}
+                                                <img src="{{ comment.image.url }}" alt="">
+                                                {% endif%}
+                                            </div>
+                                            
+                                           
+                                        </div>
+                
+                                        <span class="comment">
+                                               {{comment.body}} 
+                                        </span>
+                                        
+                                                                               
+                                    </div>
+                                    <hr>
+                                   {% endfor %}
+                                   <h4>No more comments to display</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                        
+                <!-- latest post ends here -->
+
+            </main>
+
+           
+           <hr>
+        </div>
+
+        <footer>
+            <div class="footer__container">
+                
+                <div class="right-side side__hold">
+                    <div class="social-media">
+                        <a href="#">
+                            <img src="{% static "reviews/assets/img/icons/instagram.png" %}" alt="">
+                            <span class="icon-username">
+                                @Just-Reviews
+                            </span>
+                        </a>
+
+                        <a href="#">
+                            <img src="{% static "reviews/assets/img/icons/twitter.png" %}" alt="">
+                            <span class="icon-username">
+                                @Just-Reviews
+                            </span>
+                        </a>
+
+                        <a href="#">
+                            <img src="{% static "reviews/assets/img/icons/facebook.png" %}" alt="">
+                            <span class="icon-username">
+                                  . facebook.com/justreview
+                            </span>
+                        </a>
+                    </div>
+                    
+                    <div >
+                        <div class="address-bar">
+                            <h4>Just-Reviews.NG </h4>
+                        </div>
+                        <div class="address-bar">
+                            Lekki - Epe Expy, Ajah, Lagos, Nigeria
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </footer>
+
+     
+
+        
+    <script src="{% static "reviews/assets/js/like.js" %}"></script>   
+    </body>
+
+</html>

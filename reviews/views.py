@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from reviews.models import Category, Comment, Product
-from reviews.forms import SearchForm, CategoryForm, ProductForm, CommentForm, UserRegistrationForm
+from reviews.models import Category, Comment, Product, UserAccount
+from reviews.forms import SearchForm, CategoryForm, ProductForm, CommentForm, UserRegistrationForm, Signinform, UserEditForm
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -16,6 +16,7 @@ def index(request, username = False):
 
     if username :
         user = User.objects.get(username = username)
+        print(user)
         context_dict    = {"product_list":products, "comments": comments, "user": user}
 
     return render(request, 'reviews/index.html', context_dict )
@@ -107,7 +108,7 @@ def add_product(request):
             except:
                 error = 'sorry category does not exist'
 
-                return render(request, 'reviews/add_category.html', {'form': form, 'categories': categories, 'error': error})
+                return render(request, 'reviews/add_product.html', {'form': form, 'categories': categories, 'error': error})
 
 
             return index(request)
@@ -117,10 +118,10 @@ def add_product(request):
         # just print them to the terminal.
         print(form.errors)
     
-    return render(request, 'reviews/add_category.html', {'form': form, 'categories':categories, 'commentform':commentform})
+    return render(request, 'reviews/add_product.html', {'form': form, 'categories':categories, 'commentform':commentform})
 
 
-def add_comment(request, product_slug):
+def add_comment(request, product_slug, user_id):
 
     form    = CommentForm()
     if request.method == 'POST':
@@ -128,7 +129,8 @@ def add_comment(request, product_slug):
 
         if form.is_valid():
             newcomment = Comment(title = request.POST['title'], body = request.POST['body'], 
-            product = Product.objects.get(slug = product_slug ), comment_product_slug = product_slug )
+            product = Product.objects.get(slug = product_slug ), comment_product_slug = product_slug, 
+            posted_by = (User.objects.get(id = user_id )))
         
         try: 
             if request.FILES['image']:
@@ -148,7 +150,7 @@ def add_comment(request, product_slug):
 
             return product_detail(request, product_slug)
      
-    return render(request, 'reviews/add_comment.html', {'form':form})
+    return render(request, 'reviews/index.html')
 
 
 def back_comment(request, comment_id, username):
@@ -221,28 +223,128 @@ def was_added(request):
 
 def signup(request):
     form = UserRegistrationForm()
+    error = ""
     print("got herre-----------")
+    image=""
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             userObj     = form.cleaned_data
             username    = userObj['username']
             email       =  userObj['email']
+            first_name  =  userObj['first_name']
+            last_name   =  userObj['last_name']
             password    =  userObj['password']
-            print("cleaned data-----------")
+        
+
             if not (User.objects.filter(username=username).exists() or User.objects.filter(email=email).exists()):
 
                 User.objects.create_user(username, email, password)
                 user = authenticate(username = username, password = password)
                 login(request, user)
-                print("login user data-----------")
                 user = User.objects.get(username=username)
-                return index(request, user.username)
+                user.first_name = first_name
+                user.last_name  = last_name
+
+                user.save()
+                try: 
+                    if request.FILES['image']:
+                        image = request.FILES['image']
+                        new_uac = UserAccount.objects.create(User=user, image = image, joined = time.time() )
+                        new_uac.save()
+                        return index(request, user.username)
+                except:
+                   
+                    new_uac = UserAccount.objects.create(User=user, image = "", joined = time.time() )
+                    new_uac.save()
+                    return index(request, user.username)
 
             else:
-                raise forms.ValidationError('Looks like a username with that email or password already exists')
+                error ='Looks like a username with that email or password already exists'
                 print("Looks like a username with that email or password already exists")
     else:
         form = UserRegistrationForm()
 
+    return render(request, 'reviews/login.html', {'form' : form, "error":[error]})
+
+
+def signin(request):
+    form = Signinform()
+    logout(request)
+    username = password = ''
+    if request.POST:
+        username = request.POST['username']
+        password = request.POST['password']
+
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return index(request, user.username)
     return render(request, 'reviews/login.html', {'form' : form})
+
+def profile_view(request, username):
+
+    form = UserRegistrationForm()
+    error = ""
+    image=""
+    userprofile = User.objects.get(username = username)
+
+    if request.method == 'POST':
+        form = UserEditForm(request.POST)
+        if form.is_valid():
+            userObj     = form.cleaned_data
+            username    = userObj['username']
+            email       =  userObj['email']
+            first_name  =  userObj['first_name']
+            last_name   =  userObj['last_name']
+
+        if not User.objects.filter(email=email).exists():
+
+            userprofile.first_name = first_name
+            userprofile.last_name = last_name
+            userprofile.email = email
+
+        
+            try: 
+                if request.FILES['image']:
+                    image = request.FILES['image']
+                    userprofile.user.image = image
+                    userprofile.save()
+                    return index(request, user.username)
+            except:
+                userprofile.save()
+            
+        else:
+            error = "sorry that email address is taken"
+
+    comments= Comment.objects.filter(posted_by = userprofile.id )
+      
+    context_dict    = { "comments": comments, 'form': form, "error":error}    
+    return render(request, 'reviews/profile_view.html', context_dict)
+
+def edit_profile_view():
+    form = UserRegistrationForm()
+    error = ""
+    image=""
+
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            userObj     = form.cleaned_data
+            username    = userObj['username']
+            email       =  userObj['email']
+            first_name  =  userObj['first_name']
+            last_name   =  userObj['last_name']
+
+    userprofile.first_name = first_name
+    userprofile.last_name = last_name
+    userprofile.email = email
+    try: 
+        if request.FILES['image']:
+            image = request.FILES['image']
+            userprofile.user.image = image
+            userprofile.save()
+            return index(request, user.username)
+    except:
+        userprofile.save()

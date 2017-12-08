@@ -177,7 +177,7 @@
                                 </h4>
                             </p>
 
-                            <form id="category_form" method="post" action="/reviews/add_comment/{{product.slug}}/" enctype="multipart/form-data">
+                            <form id="category_form" method="post" action="/reviews/add_comment/{{product.slug}}/{{user.id}}/" enctype="multipart/form-data">
                                 {% csrf_token %} 
                                 
                                 <br>
