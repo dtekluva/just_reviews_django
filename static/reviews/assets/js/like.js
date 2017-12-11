@@ -1,5 +1,5 @@
 function thumbsup(slug, username){
-    fetch(`http://localhost:8000/reviews/thumbs_up/${ slug }/${username}`)
+    fetch(`http://10.100.200.134:8000/reviews/thumbs_up/${ slug }/${username}`)
      .then(res => {
          res.json()
          .then((data) => {
@@ -10,35 +10,30 @@ function thumbsup(slug, username){
 };
 function thumbsdown(slug, username){
    
-        fetch(`http://localhost:8000/reviews/thumbs_down/${ slug }/${username}`)
-        .then(res => {
-            res.json()
-            .then((data) => {
-                console.log(data)
-                var now = (document.getElementsByClassName("dis-" + slug))[0];
-                console.log(now)
-                
-                // console.log(now.document.getElementsByClassName(slug))
-                now.innerHTML = ' '+data.dislike;
-            })
-        });
-    }
-    
-
-
-
+    fetch(`http://10.100.200.134:8000/reviews/thumbs_down/${ slug }/${username}`)
+    .then(res => {
+        res.json()
+        .then((data) => {
+            console.log(data)
+            var now = (document.getElementsByClassName("dis-" + slug))[0];
+            console.log(now)
+            
+            // console.log(now.document.getElementsByClassName(slug))
+            now.innerHTML = ' '+data.dislike;
+        })
+    });
+}
 function back_comment(comment_id, username){
     
-        fetch(`http://localhost:8000/reviews/back_comment/${ comment_id }/${username}`)
-        .then(res => {
-            res.json()
-            .then((data) => {
-                console.log(data)
-               document.getElementsByClassName(comment_id)[0].innerHTML = ' '+data.backs+'Backs |';
-            })
-        });
-    }
-
+    fetch(`http://10.100.200.134:8000/reviews/back_comment/${ comment_id }/${username}`)
+    .then(res => {
+        res.json()
+        .then((data) => {
+            console.log(data)
+            document.getElementsByClassName(comment_id)[0].innerHTML = ' '+data.backs+'Backs |';
+        })
+    });
+}
 function addtime(){
     var comments = Array.from(document.getElementsByClassName('comment_time'));
 
@@ -48,7 +43,7 @@ function addtime(){
         console.log(comment.innerHTML)
 
         // const comment_id = (_this.attributes[0].value).slice(5);
-        fetch(`http://localhost:8000/reviews/was_added/`)
+        fetch(`http://10.100.200.134:8000/reviews/was_added/`)
         .then((resp) => resp.json())
         .then(function(data) {
         
@@ -59,7 +54,6 @@ function addtime(){
             });
         });
 }
-
 function datify_seconds(seconds){
     if (seconds < 61){
         
@@ -112,9 +106,8 @@ function datify_seconds(seconds){
 
     return seconds;
 }
-
 function authenticate(){
-    fetch(`http://localhost:8000/reviews/thumbs_down/${ slug }/${username}`)
+    fetch(`http://10.100.200.134:8000/reviews/thumbs_down/${ slug }/${username}`)
     .then(res => {
         res.json()
         .then((data) => {
@@ -129,7 +122,6 @@ function authenticate(){
     });  
 }
 //switch display in profile view
-
 function switch_display(){
     target   = document.getElementsByClassName("switcher");
     edit_details = document.getElementsByClassName("edit_details")
@@ -140,4 +132,6 @@ function switch_display(){
         view_details[0].style.display = "none";
     })
 }
+
+
 switch_display();

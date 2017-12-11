@@ -1,26 +1,25 @@
 from django import forms
 from django.contrib.auth.models import User
-from reviews.models import Category, Comment, Product, UserAccount
+from reviews.models import Category, Comment, Product, UserAccount,Message
 
 
 class CategoryForm(forms.ModelForm):
 
 
-    name    = forms.CharField(max_length=128,
+    name = forms.CharField(max_length=128,
                            help_text="Please enter the category name.")
 
     class Meta:
         # Provide an association between the ModelForm and a model
-        model   = Category
-        fields  = ('name',)
-
+        model  =  Category
+        fields = ('name',)
 
 class ProductForm(forms.ModelForm):
-  
+
     name         = forms.CharField(max_length=30,
-                            help_text="Name     ::")
+                                   help_text="Name     ::")
     details      = forms.CharField(max_length=300,
-                           help_text="Details :")
+                                   help_text="Details :")
     views        = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
     thumbsUp     = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
     thumbsDown   = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
@@ -49,7 +48,6 @@ class CommentForm(forms.ModelForm):
         model = Comment
 
         fields  = ('title','body','image')
-      
 
 class SearchForm(forms.ModelForm):
     name   = forms.CharField(max_length=128,
@@ -60,14 +58,6 @@ class SearchForm(forms.ModelForm):
         model   = Product
         fields  = ('name',)
     
-
-# class UserAccountForm(forms.ModelForm):
-#     phone = forms.CharField(max_length=246)
-#     occupation = forms.CharField(max_length=13)
-#     class Meta:
-#         model = UserAccount
-#         fields = ('phone', 'occupation')
-
 class UserRegistrationForm(forms.ModelForm):
     username    = forms.CharField(max_length=256, widget=forms.TextInput(), help_text="UserName     ::")
     first_name  = forms.CharField(max_length=256, help_text="First name     ::")
@@ -99,3 +89,12 @@ class UserEditForm(forms.ModelForm):
     class Meta:
         model = UserAccount
         fields = ('username', 'first_name', 'last_name', 'email', 'password', 'image')
+
+class MessageForm(forms.ModelForm):
+    body    = forms.CharField(max_length=256,help_text="body     ::", widget=forms.TextInput(), required=False)
+    
+    
+
+    class Meta:
+        model = Message
+        fields = ('body',)

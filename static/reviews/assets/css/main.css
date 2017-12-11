@@ -3,7 +3,7 @@
 }
 body{
     background-color: rgb(255, 255, 255);
-    width: 1200px;
+    width: 1330px;
     overflow: scroll;
     padding: 0 20px;
     transition: all 2s ease-in;
@@ -13,7 +13,7 @@ body{
     border-left-width: 1px;
     background-color: rgb(255, 255, 255);
     padding: 0px;
-    width: 1200px;
+    width: 1330px;
 }
 
 
@@ -84,7 +84,11 @@ a .first-button{
     margin-top:0;
     margin-bottom: 20px;
     transition: all 2s ease-in;
+    
 }
+/* .btn_target{
+    display: none;
+} */
 .container2:after,
 .container2:before{
     display: table;
@@ -99,6 +103,14 @@ a .first-button{
     padding-right: 5px;
     
 }
+.pop{
+    transition: all 0.8s ease;
+    
+}
+.pop:active{
+    transform: scale(1.4);
+}
+
 .two{
     float: left;
     width: 350px;
@@ -108,9 +120,6 @@ a .first-button{
     margin-top: 10px;
 }
 
-.first-container{
-    /* background-color: aliceblue; */
-}
 
 .trending{
     display: flex;
@@ -263,4 +272,27 @@ a:hover .btn {
     justify-content: center;
     margin-bottom: 10px;
     color: rgb(55, 145, 224);
+}
+
+.message{
+    height:500px;
+    overflow:scroll;
+}
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(128, 112, 112); 
 }

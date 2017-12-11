@@ -10,96 +10,117 @@
     <link rel="stylesheet" href="{% static "reviews/assets/plugins/bootstrap/css/bootstrap.min.css" %}">
     <link rel="stylesheet" href="{% static "reviews/assets/css/main.css" %}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+</head>
 
     <body onload="addtime();">
-        <div class="container ">
 
-            <header class="head">
+        
+        <header class="head">
+            
+            <div class="page-header">
+                <div class="topmost__box-sign-up">
+                    <a href="/reviews/">
+                        <h1>  Just-Reviews
+                            <small>
+                                <br> 
+                                <h2>
+                                    No. 1 reviews landing in Nigeria
+                                </h2>
+                            </small>
+                        </h1>
+                    </a>
 
-                <div class="page-header">
-                    <div class="topmost__box-sign-up">
-                        <a href="/reviews/">
-                            <h1>  Just-Reviews
-                                <small>
-                                    <br> 
-                                    <h2>
-                                        No. 1 reviews landing in Nigeria
-                                    </h2>
-                                </small>
-                            </h1>
+                    <div class="authenthication pull-right">
+                    
+                {% if user.is_authenticated %}
+                        <a href="/reviews/profile_view/{{user.username}}" class="sign-up usernameref">
+                            <button class="btn btn-primary first-button">Hi {{user.username}}</button>
+                        </a>
+                        <a href="/reviews/signout" class="sign-in">
+                            <button class="btn btn-primary second-button">Sign-out</button>
                         </a>
 
-                        <div class="authenthication">
-                        
-                    {% if user.isAuthenticated %}
-                            <a href="#" class="sign-up">
-                                <button class="btn btn-primary first-button">Welcome Inyang</button>
-                            </a>
-                    {% endif %}
+                {% else %}
 
-                    {% if not user.isAuthenticated %}
+                        <a href="/reviews/signup" class="sign-up">
+                                <!-- <button class="btn btn-primary first-button">Sign up</button> -->
+                        </a>
+                        <a href="/reviews/signin" class="sign-in">
+                            <!-- <button class="btn btn-primary second-button">Sign-in</button> -->
+                        </a>
+                    
+                {% endif %}
 
-                            <a href="#" class="sign-up">
-                                    <button class="btn btn-primary first-button">Sign up</button>
-                            </a>
-                            <a href="#" class="sign-in">
-                                <button class="btn btn-primary second-button">Sign-in</button>
-                            </a>
+                    <div class="pic " style="position:relative; top:110%; left:-22%;" >
                         
-                    {% endif %}
-                        </div>
+                        <a href="/reviews/profile_view/{{user.username}}">
+                            <div class="avatar pull-right" >
+                            <img style=" border-radius:20%; height:60px; width:60px;" src={% if user.user.image %}"  {{user.user.image.url|default_if_none:'#'}}  "{% endif %} alt="image here">
+                            </div>
+                        </a>
+                        
                     </div>
-                    <div>
-
-                        <form id="SearchForm" method="post" action="/reviews/search/"
-                        enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="input-group">
-                            
-                            
-                            <input class="form-control" placeholder="Product" type="text" name="name" maxlength="128" required id="id_name" />
-                            
-                            <span class="input-group-btn">
-                                <input class="btn btn-primary" type="submit" name="submit" value="Search" />
-                            </span>
-                            
-                        </div>
-        
-                        </form>
-                        
                     </div>
                 </div>
+                <div>
+                    
+                    
+                    <form id="SearchForm" method="get" action="/reviews/search/"
+                    enctype="multipart/form-data">
+                    
+                    <div class="input-group">
+                        
+                        
+                        <input class="form-control" placeholder="Product" type="text" name="name" maxlength="128" required id="id_name" />
+                        
+                        <span class="input-group-btn">
+                            <input class="btn btn-primary" type="submit" name="submit" value="Search" />
+                        </span>
+                        
+                    </div>
+
+                    </form>
+                    
+                </div>
+            </div>
 
 
-            </header>
+        </header>
+
+        <div class="container ">
 
             <main>
                 <!---review AD-->
+
                 <div class="help-reviews">
-                    <div>
-                        <img src="{% static "reviews/assets/img/write_review.png" %}" alt="help-image">
+                        <!-- <div>
+                                <img src="{% static "reviews/assets/img/write_review.png" %}" alt="help-image">
+                        </div>
+    
+                        <div class="u-space-l4">
+                            <h2 class="alternate u-space-b3"><font face = "Comic sans MS" size =" 5">Join easy and start helping the Community today</font><br /></h2>
+    
+                            <p class="u-space-b3">
+                                Find Just-reviews helpful? Start helping others by sharing your experience.
+    
+                            </p>
+                            <a href="#" class="sign-up">
+                                <button class="btn btn-primary first-button">Write a review now</button>
+                            </a>
+                            <a href="#" class="sign-up">
+                                <button class="btn btn-primary first-button">Share a new product</button>
+                            </a>
+                        </div> -->
                     </div>
-
-                    <div class="u-space-l4">
-                        <h2 class="alternate u-space-b3">Help the Community</h2>
-
-                        <p class="u-space-b3">+
-                            Find Just-reviews helpful? Start helping others by sharing your experience.
-                           
-                        </p>
-                    </div>
-                </div>
         
                 <!---review AD-->
-                <hr>
                 <!---reviews display-->
                 <div class="first-container">
                 <div class="trending">
                     <p>
                         <span>
                             <h3>
-                                    {{product.name}} details
+                                PRODUCT PROFILE
                             </h3>
                             
                         </span>
@@ -107,148 +128,154 @@
                     </p>
                 </div>
 
-                <div class="container2">
-                    
-                    <div class="two" id="third">
-                        <div class="w460px">
-                            <div class="row-one-blog-head">
-                                
-                                <div class="trending-product">
-                                    {% if product.image %}
-                                    <img src="{{ product.image.url }}" alt="image here">
-                                    {% else %}
-                                    <img src="http://localhost:8000/media/product_imgs/default.png" alt="image here">
-                                    {% endif %}
+                <div class="container2">                      
+        
+                    <div class="container2">
+                        <div class="row" style="text-align:center; display:flex; color :rgb(148, 148, 148); padding-top:10px; justify-content:center; box-shadow: 0px 1px 2px #888888;">
+                            
+                            <div class="view_details container2 col-md-4" style="flex:2;" >
+                                <div class="user-image" >
+                                    <img style=" border-radius:20%; height:400px; width:100%;" src={% if product.image %}"  {{product.image.url|default_if_none:'#'}}  "{% endif %} alt="image here">
                                 </div>
-                               
-                                <hr>
+                                    <p >
+                                        <h3 style="display:flex; color :rgb(148, 148, 148);  justify-content:center;">{{ product.name}}</h3>
+                                    </p>
+                                                               
+                                    <p>
+                                        <div class="users_detail">
 
-                                <h4 class="user-satisfaction-thumbs">
+                                            Category : {{ product.category }} 
+                                        </div>
+                                    </p> 
+    
+                                    <p>
+                                        <div class="users_detail">
+                                            Details : {{product.details}}
+                                        </div>
+                                    </p> 
+                                    <p>
+                                        <div class="users_detail">
+                                            Views : {{product.views}}
+                                        </div>
+                                    </p> 
                                     
-                                    <span class="glyphicon glyphicon glyphicon-thumbs-up thumbs-up" aria-hidden="true"> {{product.thumbsUp}} </span>
-                                    <span class="glyphicon glyphicon glyphicon-thumbs-down thumbs-down" aria-hidden="true"> {{product.thumbsDown}} </span>
+                                    <p>
+                                        <div class="users_detail">
+                                            User reviews : {{product.comments}}
+                                        </div>
+                                    </p> 
+                                    <p>
+                                        <span>Added : </span><span onload="was_added" class="glyphicon glyphicon-calendar comment_time" aria-hidden="true" id="comment_time"> {{product.added}} </span>
+                                    </p>
                                     
-                                </h4>
+                                    <p>
+                                        <button style="width:100%;" class="btn btn-primary switcher" >Comment on this product</button>
+                                    </p>
 
+                                    {{ form.errors }}
+                                    {{ form.non_field_errors }}
+                                    {% if error %} 
+                                    <div style="color: red">
+                                        <ul>
+                                            <li>{{error}}</li>
+                                        </ul>
+                                    </div>
+                                    {% endif %}
+                                    {% if success %} 
+                                    <div style="color: rgb(0, 255, 21)">
+                                        <span class="glyphicon glyphicon-check">{{success}}</span>
+                                    </div>
+                                    {% endif %}
+                                
                                 
                             </div>
-                            
-                        </div>
-                    </div>
 
-                    <span>
-                        <h3>Description</h3>
-                            {{product.details}}
-                            <br>
-                            <hr>
-                        <h3>Category</h3>
-                            {{product.category}}
-                    </span>
-                  
-                </div>
-                
-                
-
-
-                <div class="trending">
-                    <p>
-                        <span>
-                            <h3>
-                                COMMENTS
-                            </h3>
-                            
-
-                            </span>
-                        </span>
-
-                    </p>
-                </div>
-
-               
-                <!-- latest post starts here -->
-
-                <div class="latest-post-row row">
-
-                        
-                    <div class="col-row" >
-                            <p>
-                                <h4>
-                                    New comment here.
-                                </h4>
-                            </p>
-
-                            <form id="category_form" method="post" action="/reviews/add_comment/{{product.slug}}/{{user.id}}/" enctype="multipart/form-data">
-                                {% csrf_token %} 
+                            <div class="edit_details container2 col-md-4" style="flex:2; display:none;"  >
+                                <div class="user-image" >
+                                    <img style=" border-radius:20%; height:400px; width:100%;" src={% if product.image %}"  {{product.image.url}}  "{% endif %} alt="image here">
+                                </div>
+                                    <p >
+                                        <h3 style="display:flex; color :rgb(148, 148, 148);  justify-content:center;">Write a review on this</h3>
+                                    </p>
+                                    <form id="category_form" method="post" action="/reviews/add_comment/{{product.slug}}/{{user.id}}/" enctype="multipart/form-data">
+                                        {% csrf_token %} 
+                                        
+                                         <p>
+                                             <input class="form-control" type="text" name="title" maxlength="20" required id="id_title" />
+                                         </p>
+                                        <p>
+                                            <input class="form-control"  type="text" name="body" maxlength="230" required id="id_body" />
+                                        </p>
+                                        <p>
+                                            <input class="form-control"  type="file" name="image" id="id_image" />
+                                        </p>
+                                        
+                                        
+                                        <input type="submit" name="submit" value="Add Comment" />
+                                        {% for hidden in form.hidden_fields %}
+                                        {{ hidden }} 
+                                        {% endfor %} 
+                                        {% for field in form %}
+                                        {{ field.errors }} 
+                                       
+                                        {% endfor %}
+                                    </form>
                                 
-                                <br>
-                                {% for hidden in form.hidden_fields %}
-                                {{ hidden }} 
-                                {% endfor %} 
-                                {% for field in form %}
-                                {{ field.errors }} 
-                                {{ field.help_text }} 
-                                {{ field }}
-                                <br>
-                                <hr>
-                            
-                                {% endfor %}
-                                
-                                <input type="submit" name="submit" value="Add Comment" />
-                            
-                                {{error}}
-                            </form>
-                    </div>
-
-
-                         {% for comment in comments %}
-                    <div class="col-row" >
-                            
-                           
-                            
-                            
-                        <div>
-                            <div class="avatar pull-right">
-                                <img src="{% static "reviews/assets/img/profiles/1.png" %}" alt="">
-                            </div>   
-
-                            <p>
-                                <h4>
-                                    {{comment.product}}
-                                </h4>
-
-                                <h5>Posted by : {{comment.title}}</h5>
-                                
-                                <span onload="was_added" class="glyphicon glyphicon-time comment_time" aria-hidden="true" id="comment_time"> {{comment.added}} |</span>
-                                <span>
-                                        <a data-id='back-{{comment.id}}' class="backs">
-                                            <span class="glyphicon glyphicon-hand-right" aria-hidden="true">  {{comment.backs}}Backs |</span>
-                                        </a>
-                                    </span>                                
-                            </p>
-                            <div class="comment-image">
-
-                                
-                                {% if comment.image %}
-                                <img src="{{ comment.image.url }}" alt="">
-                                {% endif%}
                             </div>
-                            
-                           <hr>
+
+                            <div class="user_comments" style="flex:4;">
+                                    <h4>
+                                        User reviews
+                                    </h4>
+                                    <hr>
+
+                                    {% for comment in comments %}
+                                    <div class="col-row" style=" width: 500px; margin: 0 auto;" >
+                                            
+                                        <div>
+                
+                                            <p>
+                                                <h4>
+                                                    {{comment.title}}
+                                                </h4>
+                
+                                                <h5>Posted by : {{comment.posted_by}}</h5>
+                                                
+                                                
+                                                <span onload="was_added" class="glyphicon glyphicon-time comment_time" aria-hidden="true" id="comment_time"> {{comment.added}} |</span>
+                                                
+                                                <span>
+                                                    <a onclick="back_comment('{{comment.id}}','{{ user.username}}')">
+                                                        <span class="glyphicon glyphicon-hand-right {{comment.id}}" aria-hidden="true">  {{comment.backs}}Backs |</span>
+                                                    </a>
+                                                </span>
+                                                
+                                            </p>
+                                            <div class="comment-image">
+                
+                                                
+                                                {% if comment.image %}
+                                                <img src="{{ comment.image.url }}" alt="">
+                                                {% endif%}
+                                            </div>
+                                            
+                                           
+                                        </div>
+                
+                                        <span class="comment">
+                                               {{comment.body}} 
+                                        </span>
+                                        
+                                                                               
+                                    </div>
+                                    <hr>
+                                   {% endfor %}
+                                   <h4>No more comments to display</h4>
+                            </div>
                         </div>
-
-                        <span class="comment">
-                               {{comment.body}} 
-                        </span>
-                        
-                       
-                        
-                        
                     </div>
-                   {% endfor %}
-                    
-
                 </div>
-
+                        
                 <!-- latest post ends here -->
 
             </main>
@@ -257,11 +284,51 @@
            <hr>
         </div>
 
+        <footer>
+            <div class="footer__container">
+                
+                <div class="right-side side__hold">
+                    <div class="social-media">
+                        <a href="#">
+                            <img src="{% static "reviews/assets/img/icons/instagram.png" %}" alt="">
+                            <span class="icon-username">
+                                @Just-Reviews
+                            </span>
+                        </a>
+
+                        <a href="#">
+                            <img src="{% static "reviews/assets/img/icons/twitter.png" %}" alt="">
+                            <span class="icon-username">
+                                @Just-Reviews
+                            </span>
+                        </a>
+
+                        <a href="#">
+                            <img src="{% static "reviews/assets/img/icons/facebook.png" %}" alt="">
+                            <span class="icon-username">
+                                  . facebook.com/justreview
+                            </span>
+                        </a>
+                    </div>
+                    
+                    <div >
+                        <div class="address-bar">
+                            <h4>Just-Reviews.NG </h4>
+                        </div>
+                        <div class="address-bar">
+                            Lekki - Epe Expy, Ajah, Lagos, Nigeria
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </footer>
+
      
 
         
-        <script src="{% static "reviews/assets/js/like.js" %}"></script>   
-        
+    <script src="{% static "reviews/assets/js/like.js" %}"></script>   
     </body>
 
 </html>

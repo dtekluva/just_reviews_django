@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from reviews.models import Category, Comment, Product, UserAccount
-from reviews.forms import SearchForm, CategoryForm, ProductForm, CommentForm, UserRegistrationForm, Signinform, UserEditForm
+from reviews.models import Category, Comment, Product, UserAccount, Message
+from reviews.forms import SearchForm, CategoryForm, ProductForm, CommentForm, UserRegistrationForm, Signinform, UserEditForm, MessageForm
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -11,7 +11,7 @@ import json, time
 def index(request, username = False):
 
     products        = Product.objects.order_by('-thumbsUp')[:9]
-    comments        = Comment.objects.order_by('-backs')[:9]
+    comments        = Comment.objects.order_by('-added')[:9]
     context_dict    = {"product_list":products, "comments": comments}
 
     if username :
@@ -129,8 +129,11 @@ def add_comment(request, product_slug, user_id):
 
         if form.is_valid():
             newcomment = Comment(title = request.POST['title'], body = request.POST['body'], 
-            product = Product.objects.get(slug = product_slug ), comment_product_slug = product_slug, 
-            posted_by = (User.objects.get(id = user_id )))
+                                    product = Product.objects.get(slug = product_slug ), 
+                                    comment_product_slug = product_slug, 
+                                    posted_by = (User.objects.get(id = user_id )), 
+                                    added = time.time())
+                                    
         
         try: 
             if request.FILES['image']:
@@ -286,7 +289,8 @@ def signin(request):
 def profile_view(request, username):
 
     form = UserRegistrationForm()
-    error = ""
+    error = False
+    success = False
     image=""
     userprofile = User.objects.get(username = username)
 
@@ -298,32 +302,43 @@ def profile_view(request, username):
             email       =  userObj['email']
             first_name  =  userObj['first_name']
             last_name   =  userObj['last_name']
-
-        if not User.objects.filter(email=email).exists():
+            
+        if not User.objects.filter(email=email).exists() or userprofile.email == email:
 
             userprofile.first_name = first_name
             userprofile.last_name = last_name
             userprofile.email = email
 
         
-            try: 
+           
+            try:   
                 if request.FILES['image']:
                     image = request.FILES['image']
-                    userprofile.user.image = image
+                    useracc = UserAccount.objects.get(User=userprofile )
+                    useracc.image = image
+
                     userprofile.save()
-                    return index(request, user.username)
+                    useracc.save()
+                    success = "Successfully saved changes"
+
             except:
                 userprofile.save()
+                success = "Successfully saved changes"
             
         else:
             error = "sorry that email address is taken"
 
-    comments= Comment.objects.filter(posted_by = userprofile.id )
+    comments= (Comment.objects.filter(posted_by = userprofile.id )).order_by('-added')
+    message = Message.objects.filter(sent_to = userprofile.id)
+    print(message)
+
+
       
-    context_dict    = { "comments": comments, 'form': form, "error":error}    
+    context_dict    = { "comments": comments, 'form': form, "error":error, "success":success, "message":message}    
+
     return render(request, 'reviews/profile_view.html', context_dict)
 
-def edit_profile_view():
+def edit_profile_view(request):
     form = UserRegistrationForm()
     error = ""
     image=""
@@ -348,3 +363,41 @@ def edit_profile_view():
             return index(request, user.username)
     except:
         userprofile.save()
+
+def view_user(request, username):
+    form = MessageForm()
+    viewed_user = User.objects.get(username = username)
+    viewed_user_comments = Comment.objects.filter(posted_by = viewed_user)
+
+    context_dict = {"viewed_user":viewed_user, "viewed_user_comments":viewed_user_comments, "form": form}
+
+    return render(request, 'reviews/view_user.html', context_dict)
+
+
+def messenger(request, sender, reciever, body):
+
+    sender  = User.objects.get(username = sender)
+    reciever= User.objects.get(username = reciever)
+
+    
+    new_message = Message.objects.create(sent_to = reciever, sent_from = sender, body = body, created = time.time())
+    new_message.save()
+    print("here")
+   
+    response = json.dumps({'sent': "sent"})
+
+    return HttpResponse(response)
+
+def messagify(request, username):
+    message_list = []
+    user = User.objects.get(username = username)
+    message = Message.objects.filter(sent_to = user).order_by('-created')
+    for message in message:
+        message_list.append({"from": message.sent_from.username,
+                           "to":message.sent_to.username, 
+                           "body":message.body, 
+                           "time":message.created})
+
+    response = json.dumps({'message': message_list})
+
+    return HttpResponse(response)

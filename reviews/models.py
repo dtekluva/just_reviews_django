@@ -67,3 +67,12 @@ class UserAccount(models.Model):
 
     class Meta:
         verbose_name_plural = 'User Accounts'
+
+class Message(models.Model):
+    sent_to        = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "message_to")
+    sent_from      = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "message_from")
+    body           = models.TextField(max_length=200)
+    created        = models.IntegerField(default=time.time(),  blank=True)
+
+    def __str__(self):
+        return self.sent_from.username

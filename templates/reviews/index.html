@@ -13,6 +13,7 @@
 
 
     <body onload="addtime();">
+        <audio src=""></audio>
 
         <div id="myCarousel" class="carousel slide" data-ride="carousel">
                 <!-- Indicators -->
@@ -85,7 +86,7 @@
 
                     <div class="pic " style="position:relative; top:110%; left:-30%;" >
                         
-                        <a href="#">
+                        <a href="/reviews/profile_view/{{user.username}}">
                             <div class="avatar pull-right" >
                             <img style=" border-radius:20%; height:60px; width:60px;" {% if user.user.image %} src="  {{user.user.image.url}}  "{% endif %} alt="image here">
                             </div>
@@ -191,11 +192,11 @@
 
                                     </form> -->
                                     <a onclick="thumbsup('{{product.slug}}' ,'{{ user.username}}')">
-                                        <span class="glyphicon glyphicon glyphicon-thumbs-up thumbs-up {{product.slug}}" aria-hidden="true" > {{product.thumbsUp}} </span>
+                                        <span class="glyphicon glyphicon glyphicon-thumbs-up thumbs-up pop {{product.slug}}" aria-hidden="true" > {{product.thumbsUp}} </span>
                                     </a>
 
                                     <a onclick="thumbsdown('{{product.slug}}','{{ user.username}}')">
-                                        <span class="glyphicon glyphicon-thumbs-down thumbs-down dis-{{product.slug}}" id="thumbsdown" aria-hidden="true" style="color:rgb(211, 69, 69)"> {{product.thumbsDown}} </span>
+                                        <span class="glyphicon glyphicon-thumbs-down thumbs-down pop dis-{{product.slug}}" id="thumbsdown" aria-hidden="true" style="color:rgb(211, 69, 69)"> {{product.thumbsDown}} </span>
                                     </a>
                                     
                                    
@@ -241,16 +242,19 @@
                             
                             
                         <div>
-                            <div class="avatar pull-right">
-                                <img src="{% static "reviews/assets/img/profiles/1.png" %}" alt="">
-                            </div>   
+                            <a href="/reviews/view_user/{{comment.posted_by.username}}">
+                                <div class="avatar pull-right">
+                                    <img src="{{comment.posted_by.user.image.url}}" alt="">
+                                </div>   
+                            </a>
 
                             <p>
                                 <h4>
-                                    {{comment.product}}
+                                    {{comment.title}}
                                 </h4>
 
-                                <h5>Posted by : {{comment.title}}</h5>
+                                <h5>About :{{comment.product}}</h5>
+                                <h5>Posted by : {{comment.posted_by}}</h5>
                                 
                                 
                                 <span onload="was_added" class="glyphicon glyphicon-time comment_time" aria-hidden="true" id="comment_time"> {{comment.added}} |</span>

@@ -33,7 +33,7 @@
                     <div class="authenthication pull-right">
                     
                 {% if user.is_authenticated %}
-                        <a href="#" class="sign-up usernameref">
+                        <a href="/reviews/profile_view/{{user.username}}" class="sign-up usernameref">
                             <button class="btn btn-primary first-button">Hi {{user.username}}</button>
                         </a>
                         <a href="/reviews/signout" class="sign-in">
@@ -135,40 +135,39 @@
                             
                             <div class="view_details container2 col-md-4" style="flex:2;" >
                                 <div class="user-image" >
-                                    <img style=" border-radius:20%; height:400px; width:100%;" src={% if user.user.image %}"  {{user.user.image.url|default_if_none:'#'}}  "{% endif %} alt="image here">
+                                    <img style=" border-radius:20%; height:400px; width:100%;" src={% if user.user.image %}"  {{viewed_user.user.image.url|default_if_none:'#'}}  "{% endif %} alt="image here">
                                 </div>
                                     <p >
-                                        <h3 style="display:flex; color :rgb(148, 148, 148);  justify-content:center;">{{user.last_name }} {{user.first_name }}</h3>
+                                        <h3 style="display:flex; color :rgb(148, 148, 148);  justify-content:center;">{{viewed_user.last_name }} {{viewed_user.first_name }}</h3>
                                     </p>
                                                                
                                     <p>
                                         <div class="users_detail">
 
-                                            Name : {{user.last_name }} {{user.first_name }} 
+                                            Name : {{viewed_user.last_name }} {{viewed_user.first_name }} 
                                         </div>
                                     </p> 
     
                                     <p>
-                                        <div class="users_detail username_target">
-                                            Username : {{user.username}}
+                                        <div class="users_detail ">
+                                            Username : {{viewed_user.username}}
                                         </div>
                                     </p> 
                                     
                                     <p>
                                         <div class="users_detail">
-                                            Email : {{user.email}}
+                                            Email : {{viewed_user.email}}
                                         </div>
                                     </p> 
                                     <p>
-                                        <span>Joined : </span><span onload="was_added" class="glyphicon glyphicon-calendar comment_time" aria-hidden="true" id="comment_time"> {{user.user.joined}} </span>
+                                        <span>Joined : </span><span onload="was_added" class="glyphicon glyphicon-calendar comment_time" aria-hidden="true" id="comment_time"> {{viewed_user.user.joined}} </span>
                                     </p>
                                     
                                     <p>
-                                        <button style="width:100%;" class="btn btn-primary switcher" >Edit my details</button>
+                                        <button style="width:100%;" class="btn btn-primary switcher" >Message this user</button>
                                     </p>
 
-                                    {{ form.errors }}
-                                    {{ form.non_field_errors }}
+                                    
                                     {% if error %} 
                                     <div style="color: red">
                                         <ul>
@@ -182,78 +181,40 @@
                                     </div>
                                     {% endif %}
                                 
-                                <div class="message">
-                                    <div>
-                                        <h3>Messages</h3>
-                                    </div>
-                                    <div class="message_target">
-                                        <hr>
-                                        {% for user_message in message %}
-                                        <div style="text-align:left;">
-                                            <h5 class="">From :  {{user_message.sent_from.username }}
-                                            </h5>
-                                        </div>
-                                        <div>
-                                            <h4> {{user_message.body }}
-                                            </h4>
-                                        </div>
-                                        
-                                       
-                                        <hr>
-                                        {% endfor %}
-                                    </div>
-                                    
-                                   
-                                </div>
+                                
                             </div>
 
                             <div class="edit_details container2 col-md-4" style="flex:2; display:none;"  >
                                 <div class="user-image" >
-                                    <img style=" border-radius:20%; height:400px; width:100%;" src={% if user.user.image %}"  {{user.user.image.url|default_if_none:'#'}}  "{% endif %} alt="image here">
+                                    <img style=" border-radius:20%; height:400px; width:100%;" src={% if user.user.image %}"  {{viewed_user.user.image.url|default_if_none:'#'}}  "{% endif %} alt="image here">
                                 </div>
                                     <p >
-                                        <h3 style="display:flex; color :rgb(148, 148, 148);  justify-content:center;">Edit user data</h3>
+                                        <h3 style="display:flex; color :rgb(148, 148, 148);  justify-content:center;">Send Message</h3>
                                     </p>
-                                <form method="POST" action="/reviews/profile_view/{{user.username}}/" enctype="multipart/form-data">
-                                    {% csrf_token %}                                
+                                <form  method="POST" action="/reviews/profile_view/{{viewed_user.username}}/" enctype="multipart/form-data">
+                                    {% csrf_token %}   
+                                    <p>
+                                            <h4><span>From : </span><span class="sender_target">{{user.username}}</span><span> : to : </span><span class="reciever_target">{{viewed_user.username}}</span></h4>
+                                    </p>                             
                                     <p>
     
-                                        <input class="form-control" type="text" name="last_name"  value="{{user.last_name}}" placeholder="Last Name" maxlength="10" required id="id_last_name" />
+                                        <input class="form-control messaging" type="text" name="last_name"  value="" placeholder="Mesage here" maxlength="256" required id="id_body" />
                                     </p> 
-    
-                                    <p>
-                                        <input class="form-control" type="text" name="first_name" value="{{user.first_name}}" placeholder="First Name"  maxlength="10" required id="id_first_name" />
-                                    
-                                    </p>
-                                    
-                                    <p>
-                                        <input class="form-control" type="text" name="username" value="{{user.username}}" placeholder="UserName"  maxlength="10" required id="id_username" />
-                                    </p> 
-                                    
-                                    <p>
-                                        <input class="form-control" type="email" name="email" value="{{user.email}}" placeholder="E-mail" maxlength="20" required id="id_email" />
-                                    </p>
-                                        
-                                    <p>
-                                        Profile image<input type="file" name="image" id="id_image"> 
-                                    </p>
-                                    
-                                    <p>
-                                        <button style="width:100%;" class="btn btn-primary" type="submit"> Save my changes</button>
-                                    </p>
-                                    
+                                   
                                 </form>
+                                    <p>
+                                        <button style="width:100%;" class="send_btn btn btn-primary" type="submit"> Send message</button>
+                                    </p>
                                 
-                               
                             </div>
 
                             <div class="user_comments" style="flex:4;">
                                     <h4>
-                                        Comments Posted By You
+                                        Comments Posted By {{viewed_user.username}}
                                     </h4>
                                     <hr>
 
-                                    {% for comment in comments %}
+                                    {% for comment in viewed_user_comments %}
                                     <div class="col-row" style=" width: 500px; margin: 0 auto;" >
                                             
                                         <div>
@@ -299,11 +260,12 @@
                         </div>
                     </div>
                 </div>
-                        
+                   
                 <!-- latest post ends here -->
 
             </main>
-            
+
+           
            <hr>
         </div>
 
@@ -348,8 +310,11 @@
             </div>
         </footer>
 
-    </body>
+     
+
+        
     <script src="{% static "reviews/assets/js/like.js" %}"></script>   
-    <script src="{% static "reviews/assets/js/checkmessage.js" %}"></script>   
+    <script src="{% static "reviews/assets/js/message.js" %}"></script>   
+    </body>
 
 </html>

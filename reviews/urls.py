@@ -14,7 +14,10 @@ urlpatterns = [
     url(r'^thumbs_up/(?P<product_slug>[\w\-]+)/(?P<username>[\w\-]+)/$', views.thumbsUp, name='thumbsUp'),
     url(r'^thumbs_down/(?P<product_slug>[\w\-]+)/(?P<username>[\w\-]+)/$', views.thumbsDown, name='thumbsDown'),
     url(r'^profile_view/(?P<username>[\w\-]+)/$', views.profile_view, name='profile_view'),
+    url(r'^view_user/(?P<username>[\w\-]+)/$', views.view_user, name='view_user'),
+    url(r'^messenger/(?P<sender>[\w\-]+)/(?P<reciever>[\w\-]+)/(?P<body>[\a-z\d\-]+)/$', views.messenger, name='messenger'),
     url(r'^signin/$', views.signin),
     url(r'^signup/$', views.signup ),
     url(r'^signout/$', auth_views.logout, {'template_name': 'reviews/index.html'}),
+    url(r'^check_message/(?P<username>[\w\-]+)/$', views.messagify, name='messagify'),
 ]
