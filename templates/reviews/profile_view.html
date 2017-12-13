@@ -306,7 +306,21 @@
             
            <hr>
         </div>
+        <div class="contanier">
+            
+            <div class="form-group">
+                    <select name="users" id="reciever">
+                        {% for target in allusers %}
+                        <option value="{{target.username}}">{{target.username}}</option>
+                        {% endfor %}
+                    </select>
+                    
+                    <label for="title">Reply message</label>
+                    <input type="title" class="form-control2 form-control messaging" id="" aria-describedby="title" placeholder="Enter reply text" size="12">
+            </div>
 
+            <button type="submit" class="btn btn-primary send_btn">Send</button>
+        </div>
         <footer>
             <div class="footer__container">
                 
@@ -336,7 +350,7 @@
                     
                     <div >
                         <div class="address-bar">
-                            <h4>Just-Reviews.NG </h4>
+                            <h4>Just-Reviews.NG <span class="username-message-target">{{user.username}}</span> </h4>
                         </div>
                         <div class="address-bar">
                             Lekki - Epe Expy, Ajah, Lagos, Nigeria
@@ -351,5 +365,6 @@
     </body>
     <script src="{% static "reviews/assets/js/like.js" %}"></script>   
     <script src="{% static "reviews/assets/js/checkmessage.js" %}"></script>   
+    <script src="{% static "reviews/assets/js/sendfromprofile.js" %}"></script>   
 
 </html>

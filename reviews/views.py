@@ -332,9 +332,9 @@ def profile_view(request, username):
     message = Message.objects.filter(sent_to = userprofile.id)
     print(message)
 
-
+    allusers = User.objects.all()
       
-    context_dict    = { "comments": comments, 'form': form, "error":error, "success":success, "message":message}    
+    context_dict    = { "comments": comments, 'form': form, "error":error, "success":success, "message":message, "allusers":allusers}    
 
     return render(request, 'reviews/profile_view.html', context_dict)
 

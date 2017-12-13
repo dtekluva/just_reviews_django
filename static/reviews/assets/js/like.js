@@ -1,5 +1,7 @@
+host = "10.100.200.134:8000"
+
 function thumbsup(slug, username){
-    fetch(`http://10.100.200.134:8000/reviews/thumbs_up/${ slug }/${username}`)
+    fetch(`http://${ host }/reviews/thumbs_up/${ slug }/${username}`)
      .then(res => {
          res.json()
          .then((data) => {
@@ -10,13 +12,13 @@ function thumbsup(slug, username){
 };
 function thumbsdown(slug, username){
    
-    fetch(`http://10.100.200.134:8000/reviews/thumbs_down/${ slug }/${username}`)
+    fetch(`http://${ host }/reviews/thumbs_down/${ slug }/${username}`)
     .then(res => {
         res.json()
         .then((data) => {
-            console.log(data)
+            //console.log(data)
             var now = (document.getElementsByClassName("dis-" + slug))[0];
-            console.log(now)
+            //console.log(now)
             
             // console.log(now.document.getElementsByClassName(slug))
             now.innerHTML = ' '+data.dislike;
@@ -25,11 +27,11 @@ function thumbsdown(slug, username){
 }
 function back_comment(comment_id, username){
     
-    fetch(`http://10.100.200.134:8000/reviews/back_comment/${ comment_id }/${username}`)
+    fetch(`http://${ host }/reviews/back_comment/${ comment_id }/${username}`)
     .then(res => {
         res.json()
         .then((data) => {
-            console.log(data)
+            //console.log(data)
             document.getElementsByClassName(comment_id)[0].innerHTML = ' '+data.backs+'Backs |';
         })
     });
@@ -43,11 +45,11 @@ function addtime(){
         console.log(comment.innerHTML)
 
         // const comment_id = (_this.attributes[0].value).slice(5);
-        fetch(`http://10.100.200.134:8000/reviews/was_added/`)
+        fetch(`http://${ host }/reviews/was_added/`)
         .then((resp) => resp.json())
         .then(function(data) {
         
-                console.log(data)
+                //console.log(data)
                 time_difference = data.time - parseInt(comment.innerHTML)
                 proccesed_time  = datify_seconds(time_difference)
                comment.innerHTML = " " + Math.round(proccesed_time.elapsed) + proccesed_time.unit + " ago " + "|"  ;
@@ -117,7 +119,7 @@ function authenticate(){
             
             // console.log(now.document.getElementsByClassName(slug))
             now.innerHTML = ' '+data.dislike;
-            alert("Disliked")
+            //alert("Disliked")
         })
     });  
 }
